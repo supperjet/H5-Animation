@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+    <style type="text/css"> 
+    #range { 
+    width: 300px; 
+    height: 5px;
+    background: rgba(0, 0, 0, .6); 
+    
+    -webkit-border-radius: 5px; 
+    -webkit-appearance: none !important; 
+    } 
+
+    #range::-webkit-slider-thumb{ 
+    width: 15px; 
+    height: 15px; 
+
+    background: -webkit-gradient( 
+    linear, 
+    left top, 
+    left bottom, 
+    from(#fff), 
+    to(#ccc) 
+    ); 
+
+    border: 1px solid #444; 
+    -webkit-box-shadow: 0 0 3px #000; 
+    -webkit-border-radius: 14px; 
+    -webkit-appearance: none !important; 
+    } 
+
+    #ranVau { 
+    text-align: center;
+    border: 1px solid #ccc; 
+    width: 32px; 
+    margin-left:10px;
+    } 
+    </style>
+</head>
+<body>
+   <canvas id="canvas" height="500" width="500" style="background:#000;">
+       your browser not support canvas!
+   </canvas>
+  <div>
+     <p>振幅: <input type="range" min="0" max="200" value="50" step="1" id="range"/><input type="text" value='50' id='ranVau'></p>
+  </div>
+  
+   
+   <script src="../js/utils.js"></script>
+   <script>
+       window.onload = function(){
+           var canvas = document.getElementById('canvas');
+           
+           var oRange = document.getElementById('range');
+           var ranVau = document.getElementById('ranVau');
+          
+           var context = canvas.getContext('2d');
+               context.lineWidth = 2;
+               context.strokeStyle = "#ffffff";
+           
+           var angle = 0,
+               range = 50,
+               xspeed = 0.5,
+               yspeed = 0.05,
+               xpos = 0,
+               ypos = canvas.height/2;
+           
+           stdLine();
+           drawFrame();
+           
+           oRange.addEventListener('change',function(event){
+               xpos = 0,
+               ypos = canvas.height/2;
+               
+               range = this.value;
+               ranVau.value = this.value;
+               
+               context.clearRect(0,0,canvas.width,canvas.height);
+               stdLine();
+               drawFrame();
+           },false);
+    
+           
+           
+           
+           function drawFrame(){
+               window.requestAnimationFrame(drawFrame,canvas);
+               
+               context.beginPath();
+               
+               context.moveTo(xpos,ypos);
+               //calculate new position
+               xpos += xspeed;
+               angle += yspeed;
+               ypos = canvas.height/2 + Math.sin(angle)*range;
+               context.lineTo(xpos,ypos);
+               
+               context.stroke();
+               
+           };
+           
+           function stdLine(){
+               context.save();
+               context.beginPath();
+               context.moveTo(xpos,ypos);
+               context.lineTo(canvas.width,ypos);
+               context.closePath();
+               context.strokeStyle="#479";
+               context.stroke();
+               context.restore();
+           }
+       }
+    
+    </script>
+    
+</body>
+</html>

@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>velocity extend</title>
+</head>
+<body>
+    <canvas id="canvas" style="background:#000;" width="500" height="500">
+        your browser not support canvas
+    </canvas>
+    <script src="../js/utils.js"></script>
+    <script src="../js/arrow.js"></script>
+    <script>
+       window.onload = function() {
+           var canvas = document.getElementById("canvas");
+           var context = canvas.getContext("2d");
+           
+           var arrow = new Arrow();
+           arrow.x = canvas.width/2;
+           arrow.y = canvas.height/2;
+           
+           var vr = 30, speed = 2;
+           
+           (function drawFrame(){
+               window.requestAnimationFrame(drawFrame, canvas);
+               context.clearRect(0,0,canvas.width,canvas.height);
+               
+               arrow.rotation = vr*Math.PI/180;
+               
+               arrow.x += Math.cos(arrow.rotation)*speed;
+               arrow.y += Math.sin(arrow.rotation)*speed;
+               
+               arrow.draw(context); 
+           }())
+       }
+    </script>
+</body>
+</html>

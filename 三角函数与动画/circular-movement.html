@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>circular-movement</title>
+</head>
+<body>
+   <canvas id='canvas' width="500" height="500" style="background:#000;">
+       your browser not support canvas!
+   </canvas>
+    <script src="../js/utils.js"></script>
+    <script src="../js/ball.js"></script>
+    <script>
+        window.onload = function(){
+            var canvas = document.getElementById('canvas');
+            var context = canvas.getContext('2d');
+            var ball = new Ball();
+            
+            var centerX = canvas.width/2,
+                centerY = canvas.height/2,
+                angle = 0,
+                radius = 50,
+                speed = 0.05;
+            
+            ball.x = centerX;
+            ball.y = centerY;
+            
+            (function drawFrame(){
+                window.requestAnimationFrame(drawFrame,canvas);
+                context.clearRect(0,0,canvas.width,canvas.height);
+                
+                //当radius的值相等时为圆周运动
+                //当radius的值不想等是为椭圆运动 
+                ball.x = centerX +Math.sin(angle)*radius;
+                ball.y = centerY + Math.cos(angle)*radius*2;
+                angle += speed;
+                ball.draw(context);
+            })();
+            
+            
+        }
+    
+    </script>
+</body>
+</html>

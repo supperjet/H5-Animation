@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>mouse flower</title>
+</head>
+<body>
+   <canvas id="canvas" style="background:#000;" width="500" height="500">
+       you browser not support canvas
+   </canvas>
+   
+   <script src="../js/arrow.js"></script>
+   <script src="../js/utils.js"></script>
+   <script>
+       window.onload = function(){
+           var canvas = document.getElementById("canvas");
+           var context = canvas.getContext("2d");
+           var mouse = utils.captureMouse(canvas);
+           
+           var arrow = new Arrow();
+           arrow.x = canvas.width/2;
+           arrow.y = canvas.height/2;
+           
+           var angle = 0, speed = 2;
+           
+           (function drawFrame(){
+               window.requestAnimationFrame(drawFrame, canvas);
+               context.clearRect(0,0,canvas.width,canvas.height);
+               
+               var dx = mouse.x - arrow.x;
+               var dy = mouse.y - arrow.y;
+               
+               angle = Math.atan2(dy, dx);
+               arrow.rotation = angle;//angle默认为弧度
+               
+               var vx = Math.cos(angle)*speed;
+               var vy = Math.sin(angle)*speed;
+               
+               arrow.x += vx;
+               arrow.y += vy;
+               
+               arrow.draw(context);
+           }());
+           
+       }
+    
+    </script>
+    
+</body>
+</html>

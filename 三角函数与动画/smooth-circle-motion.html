@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>smooth-up-and-down</title>
+</head>
+<body>
+   <canvas id="canvas" width="500" height="500" style="background:#000009;">
+       your browser not support canvas!
+   </canvas>
+   
+   <script src="../js/utils.js"></script>
+   <script src="../js/ball.js"></script>
+   <script>
+       window.onload = function(){
+           var canvas = document.getElementById("canvas");
+           var context = canvas.getContext("2d");
+           
+           var ball = new Ball();
+           var angle = 0,
+               range = 50,
+               speed = 0.05;
+           
+           
+           ball.x = canvas.width/2;
+           ball.y = canvas.height/2;
+           
+           (function drawFram(){
+               window.requestAnimationFrame(drawFram,canvas);
+               context.clearRect(0,0,canvas.width,canvas.height);
+               ball.y = canvas.height/2 + Math.sin(angle)*range; //[75,175]
+               ball.x = canvas.height/2 + Math.cos(angle)*range;
+               angle += speed;
+               ball.draw(context);
+           })();
+       }
+    
+    
+    </script>
+   
+   
+    
+</body>
+</html>
