@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+</head>
+<body>
+   <canvas id="canvas" width="500" height="500" style="background:#000;">
+       your browser not support canvas!
+   </canvas>
+   <script src="../js/utils.js"></script>
+   <script src="../js/ball.js"></script>
+   <script>
+       window.onload = function(){
+           var canvas = document.getElementById("canvas");
+           var context = canvas.getContext('2d');
+           
+           var ball = new Ball(20, "red");
+           ball.x = canvas.width/4;
+           ball.y = canvas.height/4;
+           
+           var f = 0.05, speed = 0, angle = 0;//设定摩擦力
+           
+           var vx = 4 ;
+           var vy = 3 ;
+           
+           (function drawFrame(){
+               window.requestAnimationFrame(drawFrame, canvas);
+               context.clearRect(0, 0, canvas.width, canvas.height);
+               
+               speed = Math.sqrt(vx*vx + vy*vy);
+               angle = Math.atan2(vy, vx);
+               
+               if(speed > f){
+                   speed -= f; //通过摩擦力减小速度
+               }else{
+                   speed = 0;
+               }
+               
+               vx = Math.cos(angle) * speed;
+               vy = Math.sin(angle) * speed;
+               
+               ball.x += vx;
+               ball.y += vy;
+               
+               ball.draw(context);
+           }());
+          
+       }
+    
+    </script>
+   
+    
+</body>
+</html>

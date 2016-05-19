@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+</head>
+<body>
+   <canvas id="canvas" width="500" height="500" style="background:#000;">
+       your browser not support canvas
+   </canvas>
+    <script src="../js/utils.js"></script>
+    <script src="../js/spaceship.js"></script>
+    <script>
+        window.onload = function(){
+            var canvas = document.getElementById("canvas");
+            var context = canvas.getContext("2d");
+            
+            var ship = new SpaceShip();
+            context.lineWidth = 2;
+            ship.x = canvas.width/2;
+            ship.y = canvas.height/2;
+            
+            var f = 0.97,vr = 0, vx = 0, vy = 0, ax = 0, ay = 0, speed = 0, angle = 0;
+            
+            window.addEventListener("keydown", function(event){
+                switch (event.keyCode){
+                    case 37:
+                        vr = -3;
+                        break;
+                    case 39:
+                        vr = 3;
+                        break;
+                    case 38:
+                        speed = 0.5;
+                        ship.showFlame = true;
+                        break;
+                }
+            }, false);
+            window.addEventListener("keyup", function(event){
+                vr = 0;
+                speed = 0;
+                ship.showFlame = false;
+            }, false);
+            
+            (function drawFramw(){
+                window.requestAnimationFrame(drawFramw, canvas);
+                context.clearRect(0, 0, canvas.width, canvas.height);
+                
+                ship.rotation += vr * Math.PI/180;
+                angle = ship.rotation;
+                
+                ax = Math.cos(angle)*speed;
+                ay = Math.sin(angle)*speed;
+                
+                vx += ax;
+                vy += ay;
+                
+                vx *= f;
+                vy *= f;
+                
+                ship.x += vx;
+                ship.y += vy;
+                
+               if(ship.x + ship.width/2 > canvas.width){
+                   ship.x = canvas.width - ship.width;
+                   vx *= -1;
+               }else if(ship.x < ship.width/2){
+                   ship.x = ship.width/2;
+                   vx *= -1;
+               }
+                
+               if(ship.y + ship.height/2 > canvas.height){
+                   ship.y = canvas.height - ship.height/2;
+                   vy *= -1;
+               }else if(ship.y < ship.height/2){
+                   ship.y = ship.height/2;
+                   vy *= -1;
+               }
+    
+                ship.draw(context);
+            }());
+        }
+    
+    </script>
+</body>
+</html>

@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+</head>
+<body>
+   <canvas id="canvas" width="500" height="500" style="background:#000;">
+       your browser not support canvas!
+   </canvas>
+   <script src="../js/utils.js"></script>
+   <script src="../js/ball.js"></script>
+   <script>
+       window.onload = function(){
+           var canvas = document.getElementById('canvas');
+           var context = canvas.getContext('2d');
+           
+           var ball = new Ball();
+           
+           ball.x = canvas.width/2;
+           ball.y = canvas.height/2;
+           
+           var f = 0.9;
+           var vx = Math.random()*50 - 25;
+           var vy = Math.random()*50 - 25;
+           
+           (function drawFrame(){
+               window.requestAnimationFrame(drawFrame, canvas);
+               context.clearRect(0, 0, canvas.width, canvas.height);
+               
+               vx *= f;
+               vy *= f;
+               
+
+               
+               ball.x += vx;
+               ball.y += vy;
+               
+               ball.draw(context);
+               
+        }());
+           
+       }
+    
+    </script>
+    
+</body>
+</html>

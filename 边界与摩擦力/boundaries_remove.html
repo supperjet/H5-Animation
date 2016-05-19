@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+    <style>
+        p{
+            position: absolute;
+            top: 0; left: 420px;
+            padding: 5px;
+            width: 100px;
+            background: #eee;  
+        }
+    
+    </style>
+</head>
+<body>
+   <canvas id="canvas" width="400" height="400" style="background:#000;">
+       your browser not support canvas
+   </canvas>
+   <p id="log"></p>
+    <script src="../js/utils.js"></script>
+    <script src="../js/ball.js"></script>
+    <script>
+        window.onload = function(){
+            var canvas = document.getElementById("canvas");
+            var context = canvas.getContext("2d");
+            var log = document.getElementById("log");
+            
+            var balls = [];
+            var numBall = 10;
+            var canWid = canvas.width;
+            var canHei = canvas.height;
+            
+            for(var i=0; i<numBall; i++){
+                var size = Math.random()*20 + 5;
+                var color = Math.random()*(0xffffff);
+                var ball = new Ball(size, color);
+                
+                ball.id = "ball_" + i;
+                ball.radius = Math.random()*30+10;
+                ball.x = Math.random()*canWid;
+                ball.y = Math.random()*canHei;
+                ball.vx = Math.random()*2 - 1;
+                ball.vy = Math.random()*2 - 1;
+                
+                balls.push(ball);
+            }
+            
+            function draw(ball, pos){
+                  ball.x += ball.vx;
+                  ball.y += ball.vy;
+                  if(ball.x - ball.radius > canvas.width || ball.radius+ball.x <0
+                    || ball.y - ball.radius > canvas.height || ball.y+ball.radius < 0){
+                      balls.splice(pos, 1); //
+                      if(balls.length > 0){
+                          log.innerHTML += "移除" + ball.id + "<br/>";
+                      }else{
+                          log.innerHTML = "全部移除";
+                      }
+                  }
+                ball.draw(context);
+                    
+              }   
+        
+            (function drawFrame(){
+                window.requestAnimationFrame(drawFrame, canvas);
+                context.clearRect(0, 0, canvas.width, canvas.height);
+                
+                var i = balls.length;
+                while(i--){
+                    draw(balls[i], i);
+                }
+            }());
+
+        }
+    </script>
+</body>
+</html>
