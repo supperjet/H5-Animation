@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+</head>
+<body>
+   <canvas id="canvas" width="400" height="400" style="background:#000;">
+       your browser not support canvas
+   </canvas>
+   <textarea name="textarea" id="txt" cols="30" rows="10"></textarea>
+   <script src="../js/utils.js"></script>
+   <script src="../js/ball.js"></script>
+   <script>
+       window.onload = function(){
+           var canvas = document.getElementById('canvas');
+           var log = document.getElementById('txt');
+           
+           var context = canvas.getContext('2d');
+           var mouse = utils.captureMouse(canvas);
+           
+           var ball = new Ball(20,"red");
+           ball.x = canvas.width/2; ball.y = canvas.height/2;
+           ball.draw(context);
+           
+           function state(wrd){
+               if(utils.containsPoint(ball.getBounds(), mouse.x, mouse.y)){
+                   log.value = "in ball : "+ wrd;
+               }else{
+                   log.value = "canvas : " + wrd;
+               }
+           }
+           
+           canvas.addEventListener('mousedown', function(event){
+               state("mousedown");
+               
+               canvas.addEventListener('mouseup', function(event){
+                    state("mouseup");
+               },false);
+               canvas.addEventListener('mousemove', function(event){
+                    state("mousemove");
+               }, false);
+           }, false);
+           
+       }
+    
+    </script>
+</body>
+</html>

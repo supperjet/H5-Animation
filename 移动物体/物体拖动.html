@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>dragging an object</title>
+</head>
+<body>
+   <canvas id="canvas" width="400" height="400" style="background:#000;">
+       your browser not support canvas
+   </canvas>
+   <script src="../js/utils.js"></script>
+   <script src="../js/ball.js"></script>
+   <script>
+       window.onload = function(){
+           var canvas = document.getElementById('canvas'),
+               context = canvas.getContext('2d'),
+               mouse = utils.captureMouse(canvas),
+               ball = new Ball(20, "red");
+           
+           ball.x = canvas.width/2;
+           ball.y = canvas.height/2;
+           
+           var w = 0, h = 0;
+           
+           canvas.addEventListener('mousedown', function(event){
+               
+               if(utils.containsPoint(ball.getBounds(), mouse.x, mouse.y)){
+                   w = mouse.x - ball.x;
+                   h = mouse.y - ball.y;
+                   canvas.addEventListener('mouseup', onMouseUp, false);
+                   canvas.addEventListener('mousemove', onMouseMove, false);
+               }
+           }, false);
+           
+           function onMouseUp(event){
+               canvas.removeEventListener('mouseup', onMouseUp, false);
+               canvas.removeEventListener('mousemove', onMouseMove, false);
+           }
+           
+           function onMouseMove(event){
+                  ball.x = mouse.x - w;
+                  ball.y = mouse.y - h;
+           }
+           
+           (function dramFrame(){
+               window.requestAnimationFrame(dramFrame, canvas);
+               context.clearRect(0, 0, canvas.width, canvas.height);
+               
+               ball.draw(context);
+           }())
+           
+           
+           
+       }
+    
+    </script>
+</body>
+</html>

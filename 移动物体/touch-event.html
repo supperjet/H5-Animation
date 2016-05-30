@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>touch-event</title>
+</head>
+<body>
+   <canvas id="canvas" width="500" height="500" style="background:#000;
+   "> your browser not support canvas</canvas> 
+   <textarea name="textarea" id="txt" cols="30" rows="10"></textarea>
+   <script src="../js/utils.js"></script>
+   <script src="../js/ball.js"></script>
+   <script>
+    window.onload = function(){
+        var canvas = document.getElementById('canvas'),
+            log = document.getElementById('txt'),
+            context = canvas.getContext('2d'),
+            touch = utils.captureTouch(canvas);
+        
+        var ball = new Ball();
+        ball.x = canvas.width/2, ball.y = canvas.height/2;
+        ball.draw(context);
+        
+        function state(wrd){
+            if(utils.containsPoint(ball.getBounds(), touch.x, touch.y)){
+                log.value = "in ball :" + wrd;
+            }else{
+                log.value = "in canvas :" + wrd;
+            }
+        }
+        
+        canvas.addEventListener('touchstart', function(event){
+            event.preventDefault();
+            state("touchstart");
+            canvas.addEventListener('touchend',function(evnet){
+                evnet.preventDefault();
+                log.value = "canvas : touchend";
+            }, false);
+            canvas.addEventListener('touchmove', function(event){
+                event.preventDefault();
+                state("touchmove");
+            }, false);
+            
+        }, false);
+        
+        
+            
+    }
+    </script>
+</body>
+</html>
