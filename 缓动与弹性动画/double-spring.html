@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>double</title>
+</head>
+<body>
+   <canvas id="canvas" width="500" height="500" style="background: #000;">
+       your browser not support canvas!!!
+   </canvas>
+   <script src="../js/utils.js"></script>
+   <script src="../js/ball.js"></script>
+   <script>
+       window.onload = function(){
+           var canvas = document.getElementById('canvas'),
+               context = canvas.getContext('2d'),
+               mouse = utils.captureMouse(canvas),
+               ball_0 = new Ball(20, "#4499ff"),
+               ball_1 = new Ball(20, "#ff0000"),
+               spring = 0.03,
+               springLength = 100,
+               f = 0.9,
+               targetX,
+               targetY,
+               ballHandle_0 = false,
+               ballHandle_1 = false;
+           
+           ball_0.x = Math.random()*canvas.width;
+           ball_0.y = Math.random()*canvas.width;
+           ball_1.x = Math.random()*canvas.width;
+           ball_1.y = Math.random()*canvas.width;
+           
+           canvas.addEventListener('mousedown', function(e){
+               if(utils.containsPoint(ball_0.getBounds(), mouse.x, mouse.y)){
+                   ballHandle_0 = true;
+               }
+               if(utils.containsPoint(ball_1.getBounds(), mouse.x, mouse.y)){
+                   ballHandle_1 = true;
+               }
+           }, false);
+           canvas.addEventListener('mouseup', function(e){
+               if(ballHandle_0 || ballHandle_1){
+                   ballHandle_0 = false;
+                   ballHandle_1 = false;
+               }
+           }, false);
+           
+           canvas.addEventListener('mousemove', function(e){
+               if(ballHandle_0){
+                   ball_0.x = mouse.x;
+                   ball_0.y = mouse.y;
+               }
+               if(ballHandle_1){
+                   ball_1.x = mouse.x;
+                   ball_1.y = mouse.y;
+               }
+           }, false);
+           
+           
+           function springTo(ballA, ballB){
+              var dx = ballB.x - ballA.x,
+                  dy = ballB.y - ballB.y,
+                  angle = Math.atan2(dy, dx);
+               
+               var targetX = ballB.x - Math.cos(angle)*springLength,
+                   targetY = ballB.y - Math.sin(angle)*springLength;
+               
+               ballA.vx += (targetX - ballA.x)*spring;
+               ballA.vy += (targetY - ballA.y)*spring;
+               
+               ballA.vx *= f;
+               ballA.vy *= f;
+               
+               ballA.x += ballA.vx;
+               ballA.y += ballA.vy;
+               
+           }          
+            
+            (function drawFrame(){
+                window.requestAnimationFrame(drawFrame, canvas);
+                context.clearRect(0, 0, canvas.width, canvas.height);
+                
+                if(!ballHandle_0){
+                    springTo(ball_0, ball_1);
+                }
+                if(!ballHandle_1){
+                    springTo(ball_1, ball_0);
+                }
+                
+                context.save();
+                context.beginPath();
+                context.strokeStyle = "#fff";
+                context.moveTo(ball_0.x, ball_0.y);
+                context.lineTo(ball_1.x, ball_1.y);
+                context.stroke();
+                context.closePath();
+                context.restore();
+                
+                ball_0.draw(context);
+                ball_1.draw(context);
+            }())
+       }
+    
+   </script>
+    
+</body>
+</html>

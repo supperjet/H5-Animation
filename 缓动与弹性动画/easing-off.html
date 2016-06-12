@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>缓动停止</title>
+</head>
+<body>
+    <canvas id="canvas" width="500" height="500" style="background:#000;">
+        your browser not support canvas!
+    </canvas>
+    <input type="text" id="log" />
+    <script src="../js/utils.js"></script>
+    <script src="../js/ball.js"></script>
+    <script>
+        window.onload = function(){
+            var canvas = document.getElementById("canvas"),
+                context = canvas.getContext('2d');
+            var log = document.getElementById('log');
+            var ball = new Ball(20, "red");
+            var targetX = canvas.width/2 + 200;
+            var easing = 0.05, stopAni;
+            
+            ball.y = canvas.height/2;
+            
+            (function drawFrame(){
+                var stopAni = window.requestAnimationFrame(drawFrame, canvas);
+                context.clearRect(0, 0, canvas.width, canvas.height);
+                
+                var dx = targetX - ball.x;
+                if(Math.abs(dx)<1){
+                    ball.x = canvas.width/2+200;
+                    //停止动画
+                    window.cancelAnimationFrame(stopAni);
+                    log.value = '动画完成';
+                }else{
+                    var vx = dx*easing;
+                    ball.x += vx;
+                }
+                
+                ball.draw(context);
+            }())
+            
+            
+        }
+    </script>
+</body>
+</html>

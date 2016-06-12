@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+</head>
+<body>
+    <canvas id="canvas" width="500" height="500" style="background-color: #000;">
+	your browser not support canvas!
+</canvas>
+
+<script type="text/javascript" src="../js/utils.js"></script>
+<script type="text/javascript" src="../js/ball.js"></script>
+<script>
+    window.onload = function(){
+        var canvas = document.getElementById('canvas'),
+            context = canvas.getContext('2d'),
+            mouse = utils.captureMouse(canvas),
+            balls = [],
+            ballsNum = 1,
+            ax = 0,
+            ay = 0,
+            vx = 0,
+            vy = 0,
+            f = 0.99,
+            spring = 0.004, //弹性系数
+            gravity = 0.002;
+        
+        for(var i=0; i<ballsNum; i++){
+            ball = new Ball(20, Math.random()*(0xffffff));
+            balls.push(ball);
+        }
+        
+        function moveBall(ball, targetX, targetY){
+            var dx = targetX - ball.x;
+            var dy = targetY - ball.y;
+                ax = dx * spring;
+                ay = dy * spring;
+            
+                ball.vx += ax;
+                ball.vy += ay;
+                ball.vy += gravity;
+                
+                ball.vx *= f;
+                ball.vy *= f;
+               
+                ball.x += ball.vx;
+                ball.y += ball.vy; 
+        }
+        
+        (function drawFrame(){
+            window.requestAnimationFrame(drawFrame, canvas);
+            context.clearRect(0, 0, canvas.width, canvas.height);
+            
+            moveBall(balls[0], mouse.x, mouse.y);
+           // moveBall(balls[1], balls[0].x, balls[0].y);
+            //moveBall(balls[2], balls[1].x, balls[1].y);
+            
+            
+             context.beginPath();
+             context.strokeStyle = '#fff';
+             context.moveTo(mouse.x, mouse.y);
+             context.lineTo(balls[0].x, balls[0].y);
+             //context.lineTo(balls[1].x, balls[1].y);
+             //context.lineTo(balls[2].x, balls[2].y);
+             context.stroke();
+            
+            for(var i=0; i<ballsNum; i++){
+                balls[i].draw(context);
+            }
+            
+        }())
+            
+    }
+</script>
+</body>
+</html>

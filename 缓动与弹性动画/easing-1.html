@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>easing</title>
+</head>
+<body>
+<canvas id="canvas" width="500" height="500" style="background-color: #000;">
+	your browser not support canvas!
+</canvas>
+
+<script type="text/javascript" src="../js/utils.js"></script>
+<script type="text/javascript" src="../js/ball.js"></script>
+<script type="text/javascript">
+	window.onload = function(){
+		var canvas = document.getElementById('canvas'),
+		    context = canvas.getContext('2d');
+
+		var ball = new Ball(20, "red");  
+		var easing = 0.05;
+		var targetX = canvas.width/2,
+            targetY = 300;
+            
+
+		(function drawFrame(){
+			window.requestAnimationFrame(drawFrame, canvas);
+			context.clearRect(0, 0, canvas.width, canvas.height);
+
+            //随着ball.x的增大， (targetX - ball.x)的值不断减小， 导致vx不打断减小
+			var vx = (targetX - ball.x)*easing; 
+			var vy = (targetY - ball.y)*easing;
+
+			ball.x += vx;
+			ball.y += vy;
+
+			ball.draw(context);
+		}())
+	}
+</script>
+
+</body>
+</html>

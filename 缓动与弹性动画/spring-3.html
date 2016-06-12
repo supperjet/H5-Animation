@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+</head>
+<body>
+   <canvas id="canvas" width="500" height="500" style="background-color: #000;">
+	your browser not support canvas!
+</canvas>
+
+<script type="text/javascript" src="../js/utils.js"></script>
+<script type="text/javascript" src="../js/ball.js"></script>
+   <script>
+      window.onload = function(){
+          var canvas = document.getElementById('canvas'),
+          context = canvas.getContext('2d'),
+          mouse = utils.captureMouse(canvas),
+          ball = new Ball(20,"orange"),
+          spring = 0.03,
+          friction = 0.95,
+          vx = 0,
+          vy = 0;
+
+      (function drawFrame () {
+        window.requestAnimationFrame(drawFrame, canvas);
+        context.clearRect(0, 0, canvas.width, canvas.height);
+
+        var dx = mouse.x - ball.x,
+            dy = mouse.y - ball.y,
+            ax = dx * spring,
+            ay = dy * spring;
+
+        vx += ax;
+        vy += ay;
+        vx *= friction;
+        vy *= friction;
+        ball.x += vx;
+        ball.y += vy;
+        ball.draw(context);
+      }());
+      }
+    </script>
+    
+</body>
+</html>
