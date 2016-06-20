@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+</head>
+<body>
+    <canvas id="canvas" width="500" height="500" style="background:#000;">
+       your browser not support canvas!
+    </canvas>
+   <script src="../js/utils.js"></script>
+   <script src="../js/ball.js"></script>
+   <script>
+    window.onload = function(){
+           var canvas = document.getElementById('canvas'),
+               context = canvas.getContext('2d');
+                
+           var ballA = new Ball(20, "red");
+               ballA.y = canvas.width/2;
+               ballA.vx = 1;
+        
+           var ballB = new Ball(20, "orange");
+               ballB.x = canvas.width;
+               ballB.y = canvas.height/2;
+               ballB.vx = -1;
+        
+        
+        (function drawFrame(){
+            window.requestAnimationFrame(drawFrame, canvas);
+            context.clearRect(0, 0, canvas.width, canvas.height);
+            
+            ballA.x += ballA.vx;
+            ballB.x += ballB.vx;
+            
+            var dx = ballB.x - ballA.x,
+                dy = ballB.y - ballA.y,
+                dist = Math.sqrt(dx * dx + dy * dy);
+            
+            if(dist < ballA.radius + ballB.radius){
+                ballA.vx *= -1;
+                ballB.vx *= -1
+            }
+            
+            ballA.draw(context);
+            ballB.draw(context);
+        }())
+        
+    }
+    </script>
+</body>
+</html>
