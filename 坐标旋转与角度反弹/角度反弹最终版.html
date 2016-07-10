@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>angle-bounce-final</title>
+</head>
+<body style="background:#ccc">
+    <canvas id="canvas" width="500" height="500" style="background:#fff;"></canvas>
+    <script src="../js/utils.js"></script>
+    <script src="../js/ball.js"></script>
+    <script src="../js/Line.js"></script>
+    <script>
+        window.onload = function(){
+            var canvas = document.querySelector('canvas'),
+                context = canvas.getContext('2d'),
+                mouse = utils.captureMouse(canvas),
+                ball = new Ball(20, "purple"),
+                line = new Line(0, 0, 300, 0),
+                canWid = canvas.width,
+                canHei = canvas.height,
+                gravity = 0.2,
+                bounce = -0.7;
+            
+            ball.x = 50;
+            ball.y = 100;
+            
+            
+            line.x = 50;
+            line.y = 300;
+           
+            
+            (function drawFrame(){
+                window.requestAnimationFrame(drawFrame, canvas);
+                context.clearRect(0, 0, canWid, canHei);
+                
+                line.rotation = (mouse.y - canHei/2) * 0.1 * Math.PI/180;
+                
+                var bounds = line.getBounds(),
+                    cos = Math.cos(line.rotation),
+                    sin = Math.sin(line.rotation);
+                
+                ball.vy += gravity;
+                ball.x += ball.vx;
+                ball.y += ball.vy;
+                
+               
+                
+                if( ball.x + ball.radius > bounds.x && ball.x - ball.radius < bounds.x + bounds.width){
+                    
+                    //获取球与线的相对位置
+                     var x1 = ball.x - line.x,
+                         y1 = ball.y - line.y;
+                    //旋转坐标
+                     var y2 = y1 * cos - x1 * sin;
+                    //旋转速度
+                     var vy1 = ball.vy * cos - ball.vx * sin;
+                    //与线段的碰撞检测
+                    if(y2 > -ball.radius && y2 < vy1){
+                        //旋转坐标
+                        var x2 = x1 * cos + y1 * sin;
+                        //旋转速度
+                        var vx1 = ball.vx * cos + ball.vy * sin;
+                        
+                        y2 = -ball.radius;
+                        vy1 *= bounce;
+                        
+                        //把所有的东西再旋转回去
+                        
+                        x1 = x2 * cos - y2 * sin;
+                        y1 = y2 * cos + x2 * sin;
+                        
+                        ball.vx = vx1 * cos - vy1 * sin;
+                        ball.vy = vy1 * cos + vx1 * sin;
+                        
+                        ball.x = line.x + x1;
+                        ball.y = line.y + y1;
+                    }
+                }
+                
+                //与墙的碰撞检测
+                if(ball.x + ball.radius > canWid){
+                    ball.x = canWid - ball.radius;
+                    ball.vx *= bounce;
+                }else if(ball.x < ball.radius){
+                    ball.x = ball.radius;
+                    ball.vx *= bounce;
+                }
+                
+                if(ball.y + ball.radius > canHei){
+                    ball.y = canHei - ball.radius;
+                    ball.vy *= bounce;
+                }else if(ball.y < ball.radius){
+                    ball.y = ball.radius;
+                    ball.vy *= bounce;
+                }
+                
+                
+                 ball.draw(context);
+                 line.draw(context);
+            }())
+        }
+    </script>
+</body>
+</html>
