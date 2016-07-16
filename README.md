@@ -58,5 +58,7 @@ _ _ _
 18. [《每周一点canvas动画》——角度反弹](https://segmentfault.com/a/1190000005923374)
 _ _ _
 
+19. [《每周一点canvas动画》——桌球运动(1)](https://segmentfault.com/a/1190000005973375)
+
 
 > 转载引用，请注明出处，至少给个star吧！
