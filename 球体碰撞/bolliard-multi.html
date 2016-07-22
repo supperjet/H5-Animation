@@ -5,7 +5,7 @@
     <title>Document</title>
 </head>
 <body>
-   <canvas id="canvas" width="500" height="500" style="background:#000;"></canvas>
+   <canvas id="canvas" width="500" height="500" style="background:#45cb96;"></canvas>
    <script src="../js/utils.js"></script>
    <script src="../js/ball.js"></script>
    <script>
@@ -14,13 +14,14 @@
                context = canvas.getContext('2d');
            
            var balls = [],
-               numBalls = 30,
+               numBalls = 40,
+               long = 85,
                bounce = -1.0;
            
            for(var i=0; i<numBalls; i++){
                var radius = Math.random()*5 + 5;
-               var color = Math.random()*(0xffffff);
-               var ball = new Ball(radius, color);
+               //var color = Math.random()*(0xffffff);
+               var ball = new Ball(radius, "#fff");
                ball.mass = Math.random()*5 + 2;
                ball.x = Math.random()*canvas.width;
                ball.y = Math.random()*canvas.height;
@@ -130,7 +131,7 @@
                    dy = ball1.y - ball0.y,
                    dist = Math.sqrt(dx*dx + dy*dy);
                
-               if(dist < 85){
+               if(dist < long){
                    context.save();
                    context.strokeStyle = "rgba(255,255,255,0.5)";
                    context.beginPath();
