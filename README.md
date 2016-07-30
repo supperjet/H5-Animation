@@ -61,7 +61,10 @@ _ _ _
 19. [《每周一点canvas动画》——桌球运动(1)](https://segmentfault.com/a/1190000005973375)
 _ _ _
 
-18. [《每周一点canvas动画》——桌球运动(2)](https://segmentfault.com/a/1190000006039757)
+20. [《每周一点canvas动画》——桌球运动(2)](https://segmentfault.com/a/1190000006039757)
+_ _ _
+
+21. [《每周一点canvas动画》——万有引力](https://segmentfault.com/a/1190000006122800)
 
 
 > 转载引用，请注明出处，至少给个star吧！

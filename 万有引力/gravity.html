@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>gravity</title>
+</head>
+<body>
+   <canvas id="canvas" width="500" height="500" style="background:#000;"></canvas>
+   <script src="../js/utils.js"></script>
+   <script src="../js/ball.js"></script>
+   <script>
+       window.onload = function(){
+           var canvas = document.getElementById('canvas'),
+               context = canvas.getContext('2d'),
+               particles = [],
+               numParticles = 50;
+           
+        
+           for(var particle, i=0; i<numParticles; i++){
+               particle = new Ball(5,"orange");
+               particle.x = Math.random()*canvas.width;
+               particle.y = Math.random()*canvas.height;
+               particle.mass = 1;
+               particles.push(particle);
+           }
+           
+           function draw(particle){
+               particle.draw(context);
+           }
+           
+           function gravitate(partA, partB){
+               var dx = partB.x - partA.x;
+               var dy = partB.y - partA.y;
+               var distQ = dx*dx + dy*dy;
+               var dist = Math.sqrt(distQ);
+               var F = (partA.mass * partB.mass)/distQ;
+               
+               var ax = F * dx/dist;
+               var ay = F * dy/dist;
+               
+               partA.vx += ax/partA.mass;
+               partA.vy += ay/partA.mass;
+               partB.vx -= ax/partB.mass;
+               partB.vy -= ay/partB.mass;
+           }
+           
+           //引力
+           function move(partA, i){
+               partA.x += partA.vx;
+               partA.y += partA.vy;
+               
+               for(var partB, j=i+1; j<numParticles; j++){
+                   partB = particles[j];
+                   //引力
+                   gravitate(partA, partB);
+               }
+           }
+           
+           
+           
+           
+           (function drawFrme(){
+               window.requestAnimationFrame(drawFrme, canvas);
+               context.clearRect(0 ,0, canvas.width, canvas.height);
+               
+               particles.forEach(move);
+               particles.forEach(draw);
+               
+           }())
+       }
+    
+   </script>
+    
+</body>
+</html>

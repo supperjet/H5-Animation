@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+</head>
+<body>
+  <canvas id="canvas" width="1368" height="800" style="background:#000;"></canvas>
+   <script src="../js/utils.js"></script>
+   <script src="../js/ball.js"></script>
+   <script>
+       window.onload = function(){
+           var canvas = document.getElementById('canvas'),
+               context = canvas.getContext('2d'),
+               particles = [],
+               numParticles = 4,
+               sun = new Ball(80, 'orange'),
+               mercury = new Ball(2, "#fff"),
+               venus = new Ball(5, "orange"),
+               earth = new Ball(10, "#00ffff");
+           
+           sun.x = canvas.width/2;
+           sun.y = canvas.height/2;
+           sun.mass = 10000;
+           particles.push(sun);
+           
+           mercury.x = canvas.width/2+150;
+           mercury.y = canvas.height/2;
+           mercury.mass = 0.1;
+           mercury.vy = 8.2;
+           mercury.name = "水星";
+           particles.push(mercury);
+           
+           venus.x = canvas.width/2+200;
+           venus.y = canvas.height/2;
+           venus.mass = 0.2;
+           venus.vy = 7.0;
+           venus.name = "金星";
+           particles.push(venus);
+           
+           earth.x = canvas.width/2+300;
+           earth.y = canvas.height/2;
+           earth.mass = 1;
+           earth.vy = 5.8;
+           earth.name = "地球";
+           particles.push(earth);
+           
+     function rotate (x, y, sin, cos, reverse) {
+                return {
+                  x: (reverse) ? (x * cos + y * sin) : (x * cos - y * sin),
+                  y: (reverse) ? (y * cos - x * sin) : (y * cos + x * sin)
+                };
+      }
+
+     function checkCollision (ball0, ball1) {
+        var dx = ball1.x - ball0.x,
+            dy = ball1.y - ball0.y,
+            dist = Math.sqrt(dx * dx + dy * dy);
+        //collision handling code here
+        if (dist < ball0.radius + ball1.radius) {
+          //calculate angle, sine, and cosine
+          var angle = Math.atan2(dy, dx),
+              sin = Math.sin(angle),
+              cos = Math.cos(angle),
+              //rotate ball0's position
+              pos0 = {x: 0, y: 0}, //point
+              //rotate ball1's position
+              pos1 = rotate(dx, dy, sin, cos, true),
+              //rotate ball0's velocity
+              vel0 = rotate(ball0.vx, ball0.vy, sin, cos, true),
+              //rotate ball1's velocity
+              vel1 = rotate(ball1.vx, ball1.vy, sin, cos, true),
+              //collision reaction
+              vxTotal = vel0.x - vel1.x;
+          vel0.x = ((ball0.mass - ball1.mass) * vel0.x + 2 * ball1.mass * vel1.x) /
+                   (ball0.mass + ball1.mass);
+          vel1.x = vxTotal + vel0.x;
+          //update position - to avoid objects becoming stuck together
+          var absV = Math.abs(vel0.x) + Math.abs(vel1.x),
+              overlap = (ball0.radius + ball1.radius) - Math.abs(pos0.x - pos1.x);
+          pos0.x += vel0.x / absV * overlap;
+          pos1.x += vel1.x / absV * overlap;
+          //rotate positions back
+          var pos0F = rotate(pos0.x, pos0.y, sin, cos, false),
+              pos1F = rotate(pos1.x, pos1.y, sin, cos, false);
+          //adjust positions to actual screen positions
+          ball1.x = ball0.x + pos1F.x;
+          ball1.y = ball0.y + pos1F.y;
+          ball0.x = ball0.x + pos0F.x;
+          ball0.y = ball0.y + pos0F.y;
+          //rotate velocities back
+          var vel0F = rotate(vel0.x, vel0.y, sin, cos, false),
+              vel1F = rotate(vel1.x, vel1.y, sin, cos, false);
+          ball0.vx = vel0F.x;
+          ball0.vy = vel0F.y;
+          ball1.vx = vel1F.x;
+          ball1.vy = vel1F.y;
+        }
+      }
+           
+     function gravite(partA, partB){
+               var dx = partB.x - partA.x,
+                   dy = partB.y - partA.y,
+                   disQ = dx*dx + dy*dy,
+                   dist = Math.sqrt(disQ),
+                   F = (partA.mass * partB.mass) / disQ;
+               
+               var ax = F * (dx / dist);
+               var ay = F * (dy / dist);
+               
+                partA.vx += ax / partA.mass;
+                partA.vy += ay / partA.mass;
+                partB.vx -= ax / partB.mass;
+                partB.vy -= ay / partB.mass;
+           }
+           
+     function move(partA, i){
+               partA.x += partA.vx;
+               partA.y += partA.vy;
+               for(var partB, j=i+1; j<numParticles; j++){
+                   partB = particles[j];
+                   checkCollision(partA, partB);
+                   gravite(partA, partB);
+               }
+           }
+           
+    
+           
+     function draw(particle){
+               particle.draw(context);
+               context.save();
+               context.fillStyle = "#fff";
+               context.beginPath();
+               context.fillText(particle.name, particle.x-10,particle.y-20)
+               context.closePath();
+               context.fill();
+               context.restore();
+               
+           }
+           
+     (function drawFrame(){
+             window.requestAnimationFrame(drawFrame, canvas);
+             context.clearRect(0, 0, canvas.width, canvas.height);
+         
+             particles.forEach(move);
+             particles.forEach(draw);
+               
+     }())
+           
+           
+       }
+    
+   </script>
+   
+    
+</body>
+</html>
