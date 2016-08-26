@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+</head>
+<body>
+    <canvas id="canvas" width="500" height="400" style="background:#000;"></canvas>
+    <script src="../js/utils.js"></script>
+    <script src="../js/ball3d.js"></script>
+    <script>
+        window.onload = function(){
+            var canvas = document.getElementById('canvas'),
+                context = canvas.getContext('2d'),
+                balls = [],
+                numBalls = 20,
+                fl = 250,
+                vpX = canvas.width/2,
+                vpY = canvas.height/2,
+                top = -200,
+                bottom = 200,
+                left = -200,
+                right = 200,
+                front = -200,
+                back = 200;
+            
+            for(var i = 0; i<numBalls; i++){
+                var ball = new Ball3d(15);
+                ball.xpos = Math.random()*400 - 200;
+                ball.ypos = Math.random()*400 - 200;
+                ball.zpos = Math.random()*400 - 200;
+                ball.vx = Math.random()*5 - 1;
+                ball.vy = Math.random()*5 - 1;
+                ball.vz = Math.random()
+            }
+        }
+    </script>
+</body>
+</html>
