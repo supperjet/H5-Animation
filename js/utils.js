@@ -32,9 +32,9 @@ function RotationToMouse(mx,my,ox,oy){
     return angle;
 }
 
-var utils = {};
+window.utils = {};
 //捕获坐标
-utils.captureMouse = function(element){
+window.utils.captureMouse = function(element){
         var mouse = {x:0,y:0};
         
         element.addEventListener('mousemove',function(event){
@@ -58,7 +58,7 @@ utils.captureMouse = function(element){
     }
     
     //获取触摸事件坐标
-utils.captureTouch = function (element) {
+window.utils.captureTouch = function (element) {
   var touch = {x: null, y: null, isPressed: false, event: null},
       body_scrollLeft = document.body.scrollLeft,
       element_scrollLeft = document.documentElement.scrollLeft,
@@ -102,7 +102,7 @@ utils.captureTouch = function (element) {
 };
     
 
-utils.parseColor = function (color, toNumber) {
+window.utils.parseColor = function (color, toNumber) {
   if (toNumber === true) {
     if (typeof color === 'number') {
       return (color | 0); //chop off decimal
@@ -143,7 +143,7 @@ utils.parseColor = function (color, toNumber) {
 };*/
 
 //将16进制颜色转换成rgb
-utils.colorToRGB = function(color,alpha){
+window.utils.colorToRGB = function(color,alpha){
     //如果是字符串格式，转换为数字
     if(typeof color === "string" && color[0] === "#"){
         
@@ -166,12 +166,12 @@ utils.colorToRGB = function(color,alpha){
     }
 };
 
-utils.containsPoint = function(rect, x, y){
+window.utils.containsPoint = function(rect, x, y){
     return !(x<rect.x || x>rect.x + rect.width ||
              y<rect.y || y>rect.y + rect.height);
 }
 
-utils.intersects = function(rectA, rectB){
+window.utils.intersects = function(rectA, rectB){
     return !(rectA.x + rectA.width < rectB.x ||
              rectB.x + rectB.width < rectA.x ||
              rectA.y + rectA.height < rectB.y ||
