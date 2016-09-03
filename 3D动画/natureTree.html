@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+    <style>
+        body, canvas{
+            margin: 0;
+            padding: 0;
+        }
+        .panel{
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 200px;
+            padding: 20px;
+            border-right: 1px solid #777;
+            border-bottom: 1px solid #777;
+            margin-right: 300px;
+        }
+    
+    </style>
+</head>
+<body>
+   <canvas id="canvas" width="800" height="500" style="background:#ccc;"></canvas>
+   <div class="panel">
+      <p>
+         <label for="hasLeaves">leaves:</label>
+         <input type="checkbox" id="hasLeaves" name="hasLeaves" class="element checkbox" checked/> 
+      </p>
+       <p>
+           <label for="">spread:</label>
+           <select id="spread" name="spread">
+                    <option value="0.3" >0.3</option>
+                    <option value="0.4" >0.4</option>
+                    <option value="0.5" >0.5</option>
+                    <option value="0.6" selected="selected">0.6</option>
+                    <option value="0.7" >0.7</option>
+                    <option value="0.8" >0.8</option>
+                    <option value="0.9" >0.9</option>
+           </select>
+       </p>
+       <p>
+           <label for="leaveType">leaveType:</label>
+           <select id="leaveType" name="leaveType"> 
+                    <option value="10">Small</option>
+                    <option value="200"  selected="selected">Medium</option>
+                    <option value="500">Big</option>
+                    <option value="900">Thin</option>
+           </select>
+       </p>
+       
+   </div>
+   <script src="../js/natureTree.js"></script>
+   <script>
+       window.onload = function(){
+           var canvas = document.getElementById('canvas'),
+               ctx = canvas.getContext('2d');
+           
+           var LeavesCtrl = document.getElementById('hasLeaves'),
+               spreadCtrl = document.getElementById('spread'),
+               leaveTypeCtrl = document.getElementById('leaveType');
+           
+            var LeaveCtrlValue, spreadValue,  leaveTypeValue;
+           
+           var W = canvas.width,
+               H = canvas.height;
+           
+           var tree = new NatureTree(ctx);
+               tree.x = W/2;
+               tree.y = H;
+               tree.draw(0.6, true, tree.medium_leaves);
+           
+           //重绘
+           function repaint(){
+               ctx.clearRect(0, 0, W, H);
+               tree.draw(spreadValue, LeaveCtrlValue, leaveTypeValue);
+           }
+           
+           //事件绑定
+           function option(obj){
+               obj.addEventListener('change', function(){
+                   if(obj == LeavesCtrl){
+                     LeaveCtrlValue = obj.checked; 
+                      if(!LeaveCtrlValue){
+                            repaint();
+                        }else{
+                            repaint();
+                      }
+                   }
+                   
+                   if(obj == spreadCtrl){
+                        spreadValue = obj.value;
+                        repaint();
+                   }
+                   
+                   if(obj ==  leaveTypeCtrl){
+                        leaveTypeValue = obj.value;
+                        repaint();
+                   }
+               });
+           }
+           
+           option(LeavesCtrl);
+           option(spreadCtrl);
+           option(leaveTypeCtrl);
+           
+           
+               
+           
+           
+           
+       }
+    
+    </script>
+    
+</body>
+</html>

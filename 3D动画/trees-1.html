@@ -5,22 +5,22 @@
     <title>Trees 1</title>
     <style>
         #canvas{
-            background-color: #eee;
+            background-color: #ccc;
         }
     </style>
   </head>
   <body>
     
-    <canvas id="canvas" width="1000" height="500"></canvas>
+    <canvas id="canvas" width="500" height="500"></canvas>
 
     <script src="../js/utils.js"></script>
-    <script src="../js/tree.js"></script>
+    <script src="../js/natureTree.js"></script>
     <script>
     window.onload = function () {
       var canvas = document.getElementById('canvas'),
           context = canvas.getContext('2d'),
           trees = [],
-          numTrees = 1000,
+          numTrees = 10,
           fl = 250,
           vpX = canvas.width / 2,
           vpY = canvas.height / 2,
@@ -29,9 +29,9 @@
           friction = 0.98;
 
       for (var tree, i = 0; i < numTrees; i++) {
-        var color = Math.random()*(0xffffff)
-        tree = new Tree(color);
-        tree.xpos = Math.random() * 2000 - 1000;
+        var color = Math.random()*(0xffffff);
+        var tree = new NatureTree(context);
+        tree.xpos = Math.random() * 1000 - 500;
         tree.ypos = floor;
         tree.zpos = Math.random() * 10000;
         trees.push(tree);
@@ -66,7 +66,7 @@
       }
       
       function draw (tree) {
-        tree.draw(context);
+       tree.draw(0.6, true, tree.medium_leaves);
       }
 
       (function drawFrame () {
