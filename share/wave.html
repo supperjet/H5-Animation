@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>wave</title>
+    <style>
+        #btn-group{
+            margin-bottom: 10px;
+        }
+        #color-group{
+            position: absolute;
+            margin-bottom: -50px;
+            margin-left: 10px;
+        }
+        #color-group div{
+            width: 20px;
+            height: 10px;
+            display: inline-block;
+        }
+    </style>
+</head>
+<body>
+  
+   <div id="btn-group">
+        <input type="button" id="speedp" value="Speed +"  />
+        <input type="button" id="speedd" value="Speed -"  />
+        <input type="button" id="heightp" value="Height +"  />
+        <input type="button" id="heightd" value="Height -"  />
+        <input type="button" id="widthp" value="Width +"  />
+        <input type="button" id="widthd" value="Width -"  />
+   </div>
+   
+   
+   <div id="color-group">
+       <div id="color1" style="background:#D01257"></div>
+       <div id="color2" style="background:#4411ff"></div>
+       <div id="color3" style="background:#FBB448"></div>
+   </div>
+   
+   
+   <canvas id="canvas" width="500" height="400" style="background: #fff; border: 1px solid #444"></canvas>
+   <script>
+       window.onload = function(){
+           var canvas = document.getElementById('canvas'),
+               ctx = canvas.getContext('2d'),
+               W = canvas.width,
+               H = canvas.height;
+           
+           var waterLine = 250, //水面高度
+               waterTop = 50,   //水波峰值
+               angle = 0,   
+               speed=0,         // 移动速度
+               lineNum = W,     //线条数目
+               color = "#4411ff",
+               speedChange = 0.03,
+               angleChange = 0.005;
+           
+           //事件绑定
+           document.getElementById('btn-group').addEventListener('click', function(e){
+               var e = event || window.event;
+               var target = e.target || e.srcElement;
+               switch (target.id){
+                  case "speedp":
+                           speedChange += 0.01;
+                           break;
+                   case "speedd":
+                           speedChange -= 0.01;
+                           break;
+                   case "heightp":
+                            waterTop += 10;
+                            break;
+                   case "heightd":
+                            waterTop -= 10;
+                            break;
+                   case  "widthp":
+                            angleChange += 0.001;
+                            break;
+                   case "widthd":
+                            angleChange -= 0.001;
+                            break;
+               }
+           })
+           document.getElementById('color-group').addEventListener('click',function(e){
+               var e = event || window.event;
+               var target = e.target || e.srcElement;
+                    switch (target.id){
+                        case "color1":
+                            color = "#D01257";
+                            break;
+                        case "color2":
+                            color = "#4411ff";
+                            break;
+                        case "color3":
+                            color = "#FBB448";
+                            break;
+                            
+                    }
+           })
+           
+           //绘制函数
+           function draw(angle){
+               for(var i =0; i< lineNum; i++){
+                  var point={
+                              x: i,
+                              y: waterLine + Math.sin(angle+speed)*waterTop
+                          };
+                   
+                   ctx.beginPath();
+		           ctx.lineWidth=1;
+		           ctx.strokeStyle= color; 
+		           ctx.moveTo(point.x,500);
+		           ctx.lineTo(point.x, point.y);
+		           ctx.stroke();
+                   
+                   angle += angleChange
+               } 
+               
+               speed += speedChange;
+          }
+           
+           (function drawFrame(){
+               window.requestAnimationFrame(drawFrame, canvas);
+               ctx.clearRect(0 , 0, W, H);
+               
+               draw(angle);
+               
+           })()
+       }
+    
+   </script>
+    
+</body>
+</html>
