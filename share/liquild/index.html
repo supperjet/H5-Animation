@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<style>
+		*{  
+			margin:0;
+			padding:0;
+			box-sizing: border-box;
+		}
+		body{
+			overflow: hidden;
+		}
+		.info{
+			position: absolute;
+			top: 10%;
+			left: 45%;
+			color: #777;
+
+		}
+		.info h1{
+			margin-left: -40px;
+			margin-bottom: 10px;
+			letter-spacing: 10px;
+			font-weight: lighter;
+			font-size: 35px;
+			font-family: "Microsoft Yahei";
+			-webkit-user-select:none;
+		}
+		span{
+	 		height:10px;
+   			width:25px;
+	 		display:inline-block;
+	 		cursor:pointer;  
+	        transition: height 0.2s;
+	     	-o-transition: height 0.2s;	
+	    	-moz-transition: height 0.2s;	
+	 		-webkit-transition: height 0.2s;	
+
+		}
+		span:hover{
+			 height:15px;
+		}
+		#blue{
+  			background-color:#367aec;
+  			left:30px;
+		}
+		#purple{
+  			background-color:#E84A5F;
+  			left:50px;
+		}
+		#black{
+  			background-color:#52D681;
+  			left:70px;
+		}
+		
+	</style>
+
+</head>
+<body>
+	<canvas id="canvas" style="background:#fff;">
+		<p>你的浏览器不支持canvas</p>
+	</canvas>
+	<div class="info">
+	<h1>Liquaid</h1>
+	<span id="blue" onclick="blue()"></span>
+    <span id="purple" onclick="purple()"></span>
+    <span id="black" onclick="black()"></span>
+	</div>
+	
+
+
+
+<script src="js/vertex.js"></script>
+<script src="js/index.js"></script>
+	
+</body>
+</html>
