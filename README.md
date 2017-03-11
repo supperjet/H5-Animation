@@ -4,16 +4,16 @@
 目前已更新章节
 - - -
 
-1. [每周一点canvas动画](https://segmentfault.com/a/1190000004852668)
+1. [每周一点canvas动画-序](https://segmentfault.com/a/1190000004852668)
 _ _ _
 
 2. [《每周一点canvas动画》——用户交互](https://segmentfault.com/a/1190000004882447)
 _ _ _
 
-3. [《每周一点canvas动画》——三角函数（1）](https://segmentfault.com/a/1190000004922024/)
+3. [《每周一点canvas动画》—— 三角函数](https://segmentfault.com/a/1190000004922024/)
 _ _ _
 
-4. [《每周一点canvas动画》——三角函数(2)](https://segmentfault.com/a/1190000004956705)
+4. [《每周一点canvas动画》——波形运动](https://segmentfault.com/a/1190000004956705)
 _ _ _
 
 5. [《每周一点canvas动画》——速度与加速度(1)](https://segmentfault.com/a/1190000004993756)
