@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style lang="">
+        .container{
+            position: relative;
+            top: 100px;
+        }
+
+        input{
+            position: absolute;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <input type="number" value="" id="record"/>
+        <canvas id="canvas" style="background: #000" width=375 height=105></canvas>
+    </div>
+    
+    
+    <script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+    <script src="../js/rule2.js"></script>
+    <script src="../js/utils.js"></script>
+    <script>
+        var canvas = document.getElementById('canvas'),
+            ctx = canvas.getContext('2d'),
+            cW = canvas.width,
+            cH = canvas.height,
+            centerX = cW / 2,
+            centerY = cH / 2;
+        
+        var ruleX = centerX, ruleY = 80;
+        var isMouseDown = false, oldX=0, offsetX = 0;
+        var mouse = utils.captureMouse(canvas);
+
+        var rule = new Rule({
+            x: ruleX,
+            y: ruleY,
+            min: 500,
+            max: 10000,
+            width: 500,
+            color: "#fff",
+            step: 1000,
+            markShort: 5,
+            markLong: 12,
+            textHeight: 5,
+            lineBottom:{
+				mx:0,
+				my:ruleY,
+				lx:cW, 
+				ly:ruleY,
+				color:'#fff'
+            },
+            lineRed :{
+				mx:centerX,
+				my:40,
+				lx:centerX,
+				ly:(ruleY+6),
+				color:'red'
+			},
+        });
+
+        //重置标尺的初始位置
+        rule.x = centerX - rule.min/rule.ratioScale;
+
+
+        var oP = $('#record');
+
+        //钱数
+        var money = oP.val(rule.min);
+
+        //起点
+        var start = rule.x;
+
+        //终点
+        var end = rule.width;
+
+        var speed=0, fl=0.95;
+
+        
+
+        oP.blur(function(e){
+                money = +this.value;
+                if(rule.min <= money && money <= rule.max){
+                    oP.val(money);
+                    rule.x = centerX - money / rule.ratioScale;
+                }else{
+                    checkBountry();
+                    oP.val(money);
+                }
+        })
+
+        canvas.addEventListener('mousedown', function(e){
+                isMouseDown = true;
+                offsetX = mouse.x - rule.x;
+                oldX = rule.x;
+                canvas.addEventListener('mouseup', onMouseUp ,false);
+                canvas.addEventListener('mousemove', onMouseMove, false);
+            })
+
+        function onMouseUp(event){
+               isMouseDown = false;
+
+               canvas.removeEventListener('mouseup', onMouseUp ,false);
+               canvas.removeEventListener('mousemove', onMouseMove, false);
+        }
+
+           
+        function onMouseMove(event){
+               rule.x = mouse.x - offsetX;
+               money = Math.floor((centerX - rule.x) * rule.ratioScale);
+               
+               //设置速度
+               speed = rule.x - oldX;
+               oldX = rule.x;
+
+               checkBountry();
+               oP.val(money);
+        }
+
+         //检测边界值
+         function checkBountry() {
+                if(money <= rule.min) {
+                    rule.x = start;
+                    money = rule.min;
+                }
+
+                if(money >= rule.max) {
+                    rule.x = centerX - end;
+                    money = rule.max;
+                }
+           }
+
+        function move() {
+            if(!isMouseDown && speed !== 0 ){
+				if(speed >= 1 || speed <= -1){
+                    rule.x += speed;
+                    speed *= fl;
+                    money = Math.floor((centerX - rule.x) * rule.ratioScale);
+                    checkBountry()
+                    oP.val(money);
+                    
+			    }
+		    }
+        }
+
+        (function drawFrame(){
+             window.requestAnimationFrame(drawFrame, canvas);
+             ctx.clearRect(0, 0, canvas.width, canvas.height);
+             move();
+             rule.draw(ctx);
+        })()
+    
+    </script>
+</body>
+</html>
