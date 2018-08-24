@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+
+<body>
+    <span>移动距离为：</span><span id="record"></span>
+    <canvas id="canvas" width="1000" height="600" style="background:#000;">
+        your browser not support canvas!
+    </canvas>
+
+    <script src="../js/utils.js"></script>
+    <script src="../js/rule.js"></script>
+    <script>
+        window.onload = function() {
+            var canvas = document.getElementById('canvas'),
+                oP = document.getElementById('record'),
+                context = canvas.getContext('2d'),
+                cW = canvas.width,
+                cH = canvas.height,
+                ruleW  = 1000,
+                ruleH = 100,
+                offsetX = 0,
+                offsetY = 0;
+
+            var isMouseDown = false, oldX=0, oldY=0, targetX; easing = 0.0005, start=false;
+            var mouse = utils.captureMouse(canvas);
+            var rule = new Rule(ruleW, ruleH);
+                rule.x = 0;
+                rule.y = canvas.height - ruleH;
+
+            canvas.addEventListener('mousedown', function(e){
+                if(utils.containsPoint(rule.getBounds(), mouse.x, mouse.y)){
+                    isMouseDown = true;
+                    offsetX = mouse.x - rule.x;
+                    offsetY = mouse.y - rule.y;
+                    oldX = rule.x;
+                    oldY = rule.y;
+                }
+                canvas.addEventListener('mouseup', onMouseUp ,false);
+                canvas.addEventListener('mousemove', onMouseMove, false);
+            })
+
+            function onMouseUp(event){
+               isMouseDown = false;
+               targetX = mouse.x;
+               start = true;
+            //    rule.ax = rule.x - oldX;
+               canvas.removeEventListener('mouseup', onMouseUp ,false);
+               canvas.removeEventListener('mousemove', onMouseMove, false);
+           }
+
+           function onMouseMove(event){
+               rule.x = mouse.x - offsetX;
+            //    rule.y = mouse.y - offsetY;
+           }
+
+           function slide() {
+             
+           }
+
+           function trackVelocity(){
+               rule.vx = rule.x - oldX;
+            //    console.log(rule.vx);
+               oldX = rule.x;
+               oldY = rule.y;
+
+               oP.innerHTML = rule.vx;
+           }
+
+           (function drawFrame(){
+             window.requestAnimationFrame(drawFrame, canvas);
+             context.clearRect(0, 0, canvas.width, canvas.height);
+            
+             if(!isMouseDown && start){
+                var a = (targetX - rule.x)*easing;
+                // var vy = (targetY - ball.y)*easing;
+                   
+                    rule.vx += a;
+                    rule.x += rule.vx;
+                    if(rule.vx < 0.0000001){
+                        start = false;
+                    }
+                    // ball.y += vy;
+             }
+
+             rule.draw(context);
+           })()
+            
+        }
+    </script>
+
+</body>
+
+</html>
