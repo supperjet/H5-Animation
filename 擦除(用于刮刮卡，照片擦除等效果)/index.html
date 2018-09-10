@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+        .box {
+            font-size: 0;
+            display: inline-block;
+            background: url("https://p4.nicaifu.com/cms/201809/cf0e99e80ba1be4dafeac268acb2bb5b.jpg");
+            background-size: cover;
+        }
+        canvas {
+            padding: 0;
+            margin: 0;
+            background: transparent;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="box">
+        <canvas id="canvas"></canvas>
+    </div>
+
+    <script>
+        window.onload = function () {
+            var url ='https://p4.nicaifu.com/cms/201809/5c506be6ce636e0ee719e62d105d694f.jpg';
+            var canvas = document.getElementById('canvas');
+            var ctx = canvas.getContext('2d');
+            var touch = {
+                x: null,
+                y: null,
+                isPressed: false
+            };
+
+            // var body_scrollLeft = document.body.scrollLeft;
+            // var ele_scrollleft = document.documentElement.scrollleft;
+            // var body_scrllTop = document.body.scrollleft;
+            // var ele_scrollTop = document.documentElement.scrollTop;
+            // var offsetLeft = canvas.offsetLeft;
+            // var offsetTop = canvas.offsetTop;
+
+            drawLayer(url).then((res) => {
+                setCanvas(res)
+            })
+
+            // draw layer picture
+            function drawLayer(url) {
+                return new Promise((reslove, reject) => {
+                    var img = new Image();
+                    img.src = url;
+                    img.onload = function () {
+                        var width = Math.min(window.innerWidth, img.width);
+                        var height = img.height * (width / img.width);
+                        var obj = {
+                            w: width,
+                            h: height,
+                            img: img
+                        }
+                        reslove(obj)
+                    }
+                })
+            }
+
+            // set canvas width && height
+            function setCanvas(obj) {
+                if (obj) {
+                    canvas.width = obj.w;
+                    canvas.height = obj.h;
+                    ctx.drawImage(obj.img, 0, 0, obj.w, obj.h)
+                }
+            }
+
+            function drawEraser(oldV, newV, ctx) {
+                ctx.save();
+                ctx.globalCompositeOperation = 'destination-out';
+                ctx.lineWidth = 35;
+                ctx.lineCap = 'round';
+                ctx.beginPath();
+                ctx.moveTo(oldV.x, oldV.y);
+                ctx.lineTo(newV.x, newV.y);
+                ctx.stroke();
+                ctx.closePath()
+                ctx.restore();
+            }
+
+            canvas.addEventListener('touchstart', function (e) {
+                var e = e.changedTouches[0] || e.touches[0];
+                touch = {
+                    x: e.pageX,
+                    y: e.pageY,
+                    isPressed: true
+                }
+               
+            });
+            canvas.addEventListener('touchmove', function (e) {
+                var e = e.changedTouches[0] || e.touches[0];
+                if (touch.isPressed) {
+                    var newV = {
+                        x: e.pageX,
+                        y: e.pageY
+                    }
+                    drawEraser(touch, newV, ctx);
+                    touch.x = newV.x;
+                    touch.y = newV.y;
+                }
+            });
+            canvas.addEventListener('touchend', function (e) {
+                touch.isPressed = false;
+            });
+        }
+    </script>
+</body>
+
+</html>
