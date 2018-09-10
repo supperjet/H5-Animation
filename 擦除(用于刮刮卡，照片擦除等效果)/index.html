@@ -35,18 +35,14 @@
             var url ='https://p4.nicaifu.com/cms/201809/5c506be6ce636e0ee719e62d105d694f.jpg';
             var canvas = document.getElementById('canvas');
             var ctx = canvas.getContext('2d');
+            var dpr = window.devicePixelRatio || 1;
+            var pixels = null;
+            var percent = 70;   //用于判断涂抹区域
             var touch = {
                 x: null,
                 y: null,
                 isPressed: false
             };
-
-            // var body_scrollLeft = document.body.scrollLeft;
-            // var ele_scrollleft = document.documentElement.scrollleft;
-            // var body_scrllTop = document.body.scrollleft;
-            // var ele_scrollTop = document.documentElement.scrollTop;
-            // var offsetLeft = canvas.offsetLeft;
-            // var offsetTop = canvas.offsetTop;
 
             drawLayer(url).then((res) => {
                 setCanvas(res)
@@ -73,9 +69,17 @@
             // set canvas width && height
             function setCanvas(obj) {
                 if (obj) {
-                    canvas.width = obj.w;
-                    canvas.height = obj.h;
-                    ctx.drawImage(obj.img, 0, 0, obj.w, obj.h)
+                    canvas.width = obj.w * dpr;
+                    canvas.height = obj.h * dpr;
+                    canvas.style.width = obj.w + 'px';
+                    canvas.style.height = obj.h + 'px';
+                    ctx.scale(dpr, dpr);
+
+                    // 由于getImageData的跨域问题，计算绘制区域效果使用黑色方块代替
+                    ctx.fillRect(0,0,obj.w, obj.h);
+                   
+                    // ctx.drawImage(obj.img, 0, 0, obj.w, obj.h)
+                    pixels = canvas.width * canvas.height;
                 }
             }
 
@@ -91,6 +95,18 @@
                 ctx.closePath()
                 ctx.restore();
             }
+            
+            // calculate the area of scratch
+            function scratchArea() {
+                var points = 0;
+                var imageData = ctx.getImageData(0,0,canvas.width,canvas.height).data;
+                for(var i=0, len=imageData.length; i<len; i+=4) {
+                    if(imageData[i] === 0 && imageData[i+1] === 0 && imageData[i+2] === 0 && imageData[i+3] === 0) {
+                        points++
+                    }
+                }
+                return (points / pixels) * 100;
+            }
 
             canvas.addEventListener('touchstart', function (e) {
                 var e = e.changedTouches[0] || e.touches[0];
@@ -99,7 +115,7 @@
                     y: e.pageY,
                     isPressed: true
                 }
-               
+                fade()
             });
             canvas.addEventListener('touchmove', function (e) {
                 var e = e.changedTouches[0] || e.touches[0];
@@ -115,6 +131,9 @@
             });
             canvas.addEventListener('touchend', function (e) {
                 touch.isPressed = false;
+                if(scratchArea() > 70) {
+                    ctx.clearRect(0,0,canvas.width,canvas.height)
+                }
             });
         }
     </script>
