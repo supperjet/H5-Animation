@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <input type="file" id="audio">
+    <canvas id="canvas"></canvas>
+    <script src="analyser.js"></script>
+    <script src="setCanvas.js"></script>
+    <script src="lineCircle.js"></script>
+    <script>
+        window.onload = function() {
+            var audioInput = document.getElementById('audio');
+            var analyserSource = new Analyser(audioInput,256);
+            var audioLen = analyserSource.getAudioLength();
+            var canvas = document.getElementById('canvas');
+            var ctx = canvas.getContext('2d');
+            var dpr = window.devicePixelRatio || 1;
+            var obj = {w: 300, h: 500};
+            var options = {
+                x: 150,
+                y: 250,
+                radius: 100,
+                initAngle: 0,
+                color: "rgba(255,255,255,0.8)",
+                data: Array(audioLen).fill(0.5)
+            }
+            var options2 = {
+                x: 150,
+                y: 250,
+                radius: 80,
+                initAngle: 20,
+                color: "#f87d42",
+                data: Array(audioLen).fill(0.5)
+            }
+            
+            setCanvas(canvas, ctx, dpr, obj, '#000');
+            
+            drawCircle(options);
+
+            function drawCircle(opt) {
+                var LC = new LineCircle(opt);
+                    LC.draw(ctx);
+            }
+            var timer = setInterval(drawFrame, 90);
+
+            function drawFrame() {
+                var audioData = analyserSource.getTimeData();
+                if(audioData.length>0) {
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+                    var newData = audioData.map(item => {
+                        if(item > 128) {
+                            item = item - 128;
+                        }else{
+                            item = 128 -item
+                        }
+                        return item = item / 2
+                    });
+                    options.data = newData;
+                    options2.data = newData;
+                    var LC = new LineCircle(options);
+                    var LC_2 = new LineCircle(options2);
+                    LC.draw(ctx);
+                    LC_2.draw(ctx);
+                }else{
+                //    window.clearInterval(timer);
+                }
+            }
+            
+
+            
+           
+            // (function drawFrame(){
+            //     window.requestAnimationFrame(drawFrame);
+            //     var audioData = analyserSource.getData();
+            //     if(audioData.length>0) {
+            //         ctx.clearRect(0, 0, canvas.width, canvas.height);
+            //         var newData = audioData.map(item => {
+            //             if(item > 128) {
+            //                 item = item - 128;
+            //             }else{
+            //                 item = 128 -item
+            //             }
+            //             return item = item / 2
+            //         });
+            //         options.data = newData;
+            //         var LC = new LineCircle(options);
+            //         LC.draw(ctx);
+            //         // console.log(newData
+            //     }else{
+            //         // 取消定时动画
+                   
+            //     }
+            // })()
+            
+        }
+    </script>
+</body>
+</html>
